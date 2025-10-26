@@ -1,0 +1,60 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repo-Bank</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>REPO-BANK</header>
+
+<div class="container">
+    <nav>
+        <h2>Меню</h2>
+        <button onclick="transfer()">Отправить деньги</button>
+        <button onclick="deposit()">Пополнить 500 ₽</button>
+        <button onclick="resetBank()">Сбросить банк</button>
+        <button onclick="earnMoney()">Заработать много денег</button>
+        <button onclick="openNewAccount()">Открыть новый счёт</button>
+        <button onclick="renameAccount()">Переименовать счёт</button>
+        <button onclick="deleteAccount()">Удалить счёт</button>
+    </nav>
+
+```
+<main>
+    <h2>Выбор активного счёта</h2>
+    <select id="activeAccount" onchange="selectActiveAccount()"></select>
+
+    <h2>Балансы</h2>
+    <div id="balances"></div>
+
+    <h2>История операций</h2>
+    <div id="history">
+        <ul id="historyList"></ul>
+    </div>
+</main>
+```
+
+</div>
+
+<footer>© 2025 АО "Repo-Bank". Все права защищены.</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
