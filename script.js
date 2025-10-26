@@ -1,104 +1,146 @@
-let accounts = [{name: 'Основной счёт', balance: 1500}];
-let history = [];
-let activeAccountIndex = 0;
-
-function updateAccountSelect() {
-    const select = document.getElementById('activeAccount');
-    select.innerHTML = '';
-    accounts.forEach((acc, index) => {
-        const option = document.createElement('option');
-        option.value = index;
-        option.text = acc.name;
-        if(index === activeAccountIndex) option.selected = true;
-        select.appendChild(option);
-    });
+/* style.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #121212;
+    margin: 0;
+    padding: 0;
+    color: #E0E0E0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #1F1F1F;
+    color: #FFD700;
+    font-size: 2.5em;
+    font-weight: bold;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.container {
+    display: flex;
+    flex-grow: 1;
+    margin: 20px;
+}
+nav {
+    width: 220px;
+    background-color: #1E1E1E;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: 4px 0 12px rgba(0,0,0,0.5);
+}
+nav h2 { margin-top: 0; }
+nav button {
+    background-color: #FFD700;
+    color: #121212;
+    border: none;
+    padding: 12px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 10px 0;
+    transition: 0.3s;
+    box-shadow: 0 0 5px #FFD700;
+}
+nav button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #FFD700, 0 0 30px #FFC300;
+}
+main {
+    flex-grow: 1;
+    margin-left: 20px;
+    background-color: #1F1F1F;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+}
+main h2 { margin-top: 0; }
+.account-balance {
+    background: linear-gradient(145deg, #FFD700, #FFC300);
+    padding: 15px 20px;
+    margin: 10px 0;
+    border-radius: 25px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #121212;
+    text-align: center;
+    box-shadow: 0 0 15px #FFD700, 0 0 30px #FFC300;
+    transition: transform 0.2s, box-shadow 0.3s;
+}
+.account-balance:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #FFD700, 0 0 50px #FFC300;
+}
+select {
+    padding: 10px;
+    margin: 10px 0;
+    width: 100%;
+    border: none;
+    border-radius: 20px;
+    background-color: #2A2A2A;
+    color: #E0E0E0;
+}
+#history {
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #2A2A2A;
+    padding: 15px;
+    border-radius: 20px;
+}
+#history ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#history li {
+    margin-bottom: 8px;
+    padding: 6px 12px;
+    background-color: #333333;
+    border-radius: 15px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+#history li:hover {
+    background-color: #444444;
+    transform: scale(1.02);
+}
+footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #1F1F1F;
+    color: #FFD700;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.5);
 }
 
-function selectActiveAccount() {
-    const select = document.getElementById('activeAccount');
-    activeAccountIndex = parseInt(select.value);
+/* Адаптивность для мобильных */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        margin: 10px;
+    }
+    nav {
+        width: 100%;
+        margin-bottom: 20px;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    main {
+        margin-left: 0;
+        border-radius: 20px;
+    }
+    header {
+        font-size: 2em;
+        padding: 15px;
+    }
+    .account-balance {
+        font-size: 1.2em;
+        padding: 12px 15px;
+    }
 }
-
-function updateBalances() {
-    const balancesDiv = document.getElementById('balances');
-    balancesDiv.innerHTML = '';
-    accounts.forEach(acc => {
-        const div = document.createElement('div');
-        div.className = 'account-balance';
-        div.textContent = `${acc.name}: ${acc.balance} ₽`;
-        balancesDiv.appendChild(div);
-    });
-    updateAccountSelect();
-}
-
-function updateHistory() {
-    const list = document.getElementById('historyList');
-    list.innerHTML = '';
-    history.slice().reverse().forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = item;
-        list.appendChild(li);
-    });
-}
-
-function transfer() {
-    const recipient = prompt('Введите имя получателя:');
-    const amount = parseFloat(prompt('Введите сумму:'));
-    if (!recipient || isNaN(amount) || amount <= 0) { alert('Некорректные данные'); return; }
-    if (amount > accounts[activeAccountIndex].balance) { alert('Недостаточно средств'); return; }
-    accounts[activeAccountIndex].balance -= amount;
-    history.push(`Счёт ${accounts[activeAccountIndex].name}: перевод ${amount} ₽ -> ${recipient}`);
-    updateBalances();
-    updateHistory();
-}
-
-function deposit() {
-    accounts[activeAccountIndex].balance += 500;
-    history.push(`Счёт ${accounts[activeAccountIndex].name}: пополнение 500 ₽`);
-    updateBalances();
-    updateHistory();
-}
-
-function resetBank() {
-    accounts = [{name: 'Основной счёт', balance: 1500}];
-    history = [];
-    activeAccountIndex = 0;
-    updateBalances();
-    updateHistory();
-}
-
-function earnMoney() {
-    window.location.href = 'https://evuzi.github.io/Repo.labyby.game/';
-}
-
-function openNewAccount() {
-    const accountName = prompt('Введите название нового счёта:', 'Новый счёт');
-    if (!accountName) return;
-    accounts.push({name: accountName, balance: 0});
-    history.push(`Открыт новый счёт: ${accountName}`);
-    activeAccountIndex = accounts.length - 1;
-    updateBalances();
-    updateHistory();
-    alert(`Счёт "${accountName}" успешно создан!`);
-}
-
-function renameAccount() {
-    const newName = prompt('Введите новое название счёта:', accounts[activeAccountIndex].name);
-    if (!newName) return;
-    history.push(`Счёт ${accounts[activeAccountIndex].name} переименован в ${newName}`);
-    accounts[activeAccountIndex].name = newName;
-    updateBalances();
-    updateHistory();
-}
-
-function deleteAccount() {
-    if(accounts.length <= 1) { alert('Нельзя удалить последний счёт!'); return; }
-    const removed = accounts.splice(activeAccountIndex, 1)[0];
-    history.push(`Счёт ${removed.name} удалён`);
-    activeAccountIndex = Math.max(0, activeAccountIndex - 1);
-    updateBalances();
-    updateHistory();
-}
-
-updateBalances();
-updateHistory();
